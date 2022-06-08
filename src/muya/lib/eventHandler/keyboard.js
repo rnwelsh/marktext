@@ -68,6 +68,17 @@ class Keyboard {
       ) {
         return
       }
+      if (event.key === EVENT_KEYS.Control ||
+          event.key === EVENT_KEYS.Alt ||
+          event.key === EVENT_KEYS.Escape ||
+          event.key === EVENT_KEYS.Shift ||
+          event.key === EVENT_KEYS.PageUp ||
+          event.key === EVENT_KEYS.PageDown
+      ) {
+        // don't focus cursor on these keys. consistent with other editor behavior
+        return
+      }
+
       // Cursor outside editor area or over not editable elements.
       if (event.target.closest('[contenteditable=false]')) {
         return

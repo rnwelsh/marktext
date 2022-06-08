@@ -17,3 +17,5 @@ thumbs.db
 .eslintcache
 marktext.code-workspace
 **/*.NEW
+**/*.OLD
+

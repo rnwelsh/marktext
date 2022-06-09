@@ -7,10 +7,13 @@ const FOOTNOTE_REG = /^\[\^([^\^\[\]\s]+?)(?<!\\)\]:$/
 
 const checkAutoIndent = (text, offset) => {
   const pairStr = text.substring(offset - 1, offset + 1)
+  // const test = /^(\{\}|\[\]|\(\)|><)$/.test(pairStr)
+  // console.log('checkAutoIndent: ', test)
   return /^(\{\}|\[\]|\(\)|><)$/.test(pairStr)
 }
-const getIndentSpace = text => {
-  const match = /^(\s*)\S/.exec(text)
+const getIndentSpace = (text) => {
+  const match = /\n([ \t]*).*$/.exec(text)
+  // console.log('__>match:_', match)
   return match ? match[1] : ''
 }
 
@@ -256,7 +259,7 @@ const enterCtrl = ContentState => {
     if (event.shiftKey && block.type === 'span' && block.functionType === 'paragraphContent') {
       let { offset } = start
       const { text, key } = block
-      const indent = getIndentSpace(text)
+      const indent = getIndentSpace(text.substring(1, start.offset))
       block.text = text.substring(0, offset) + '\n' + indent + text.substring(offset)
 
       offset += 1 + indent.length
@@ -271,7 +274,7 @@ const enterCtrl = ContentState => {
     ) {
       const { text, key } = block
       const autoIndent = checkAutoIndent(text, start.offset)
-      const indent = getIndentSpace(text)
+      const indent = getIndentSpace(text.substring(1, start.offset))
       block.text = text.substring(0, start.offset) +
         '\n' +
         (autoIndent ? indent + ' '.repeat(this.tabSize) + '\n' : '') +

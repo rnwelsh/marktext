@@ -1,5 +1,6 @@
 import { ipcRenderer } from 'electron'
 import bus from '../bus'
+// import Vue from 'vue'
 
 // user preference
 const state = {
@@ -55,6 +56,8 @@ const state = {
 
   theme: 'light',
   autoSwitchTheme: 2,
+  customCss: '',
+  devToolsEnabled: false,
 
   spellcheckerEnabled: false,
   spellcheckerNoUnderline: false,
@@ -96,8 +99,6 @@ const state = {
   cliScript: ''
 }
 
-const getters = {}
-
 const mutations = {
   SET_USER_PREFERENCE (state, preference) {
     Object.keys(preference).forEach(key => {
@@ -109,10 +110,14 @@ const mutations = {
   SET_MODE (state, { type, checked }) {
     state[type] = checked
   },
-  TOGGLE_VIEW_MODE (state, entryName) {
+  TOGGLE_PREFERENCE (state, entryName) {
+    const preState = state[entryName]
+    console.log(`${entryName} value: `, state[entryName])
     state[entryName] = !state[entryName]
   }
 }
+
+const getters = {}
 
 const actions = {
   ASK_FOR_USER_PREFERENCE ({ commit }) {
@@ -126,6 +131,11 @@ const actions = {
 
   SET_SINGLE_PREFERENCE ({ commit }, { type, value }) {
     // save to electron-store
+    ipcRenderer.send('mt::set-user-preference', { [type]: value })
+  },
+  SET_TOG_ENABLE_DT ({ commit }, { type, value }) {
+    // save to electron-store
+    // toggleEnableDevtools(value)
     ipcRenderer.send('mt::set-user-preference', { [type]: value })
   },
 
@@ -146,7 +156,7 @@ const actions = {
       bus.$emit('show-command-palette')
     })
     ipcRenderer.on('mt::toggle-view-mode-entry', (event, entryName) => {
-      commit('TOGGLE_VIEW_MODE', entryName)
+      commit('TOGGLE_PREFERENCE', entryName)
       dispatch('DISPATCH_EDITOR_VIEW_STATE', { [entryName]: state[entryName] })
     })
   },
@@ -154,7 +164,7 @@ const actions = {
   // Toggle a view option and notify main process to toggle menu item.
   LISTEN_TOGGLE_VIEW ({ commit, dispatch, state }) {
     bus.$on('view:toggle-view-entry', entryName => {
-      commit('TOGGLE_VIEW_MODE', entryName)
+      commit('TOGGLE_PREFERENCE', entryName)
       dispatch('DISPATCH_EDITOR_VIEW_STATE', { [entryName]: state[entryName] })
     })
   },

@@ -1,6 +1,7 @@
 import { ipcMain } from 'electron'
 import { COMMANDS } from '../../commands'
 
+
 const typewriterModeMenuItemId = 'typewriterModeMenuItem'
 const focusModeMenuItemId = 'focusModeMenuItem'
 
@@ -23,13 +24,15 @@ const toggleLayout = (win, type) => {
 }
 
 export const debugToggleDevTools = win => {
-  if (win && global.MARKTEXT_DEBUG) {
+  // if (win && (isDevtoolsEnabled && global.MARKTEXT_DEBUG)) {
+  if (win) {
     win.webContents.toggleDevTools()
   }
 }
 
 export const debugReloadWindow = win => {
-  if (win && global.MARKTEXT_DEBUG) {
+  // if (win && (isDevtoolsEnabled && global.MARKTEXT_DEBUG)) {
+  if (win) {
     ipcMain.emit('window-reload-by-id', win.id)
   }
 }
@@ -50,6 +53,9 @@ export const toggleSourceCodeMode = win => {
 
 export const toggleSidebar = win => {
   toggleLayout(win, 'showSideBar')
+}
+export const toggleDevtoolsEnabled = win => {
+  toggleLayout(win, 'devtoolsEnabled ')
 }
 
 export const toggleTabBar = win => {
@@ -109,6 +115,14 @@ export const viewLayoutChanged = (applicationMenu, changes) => {
     const menuItem = applicationMenu.getMenuItemById(id)
     menuItem.checked = value
   }
+  const toggleEnableDevtools = (show) => {
+    applicationMenu.getMenuItemById('separatorDevTools').enabled = show
+    applicationMenu.getMenuItemById('showDevTools').enabled = show
+    applicationMenu.getMenuItemById('reloadWindow').enabled = show
+    applicationMenu.getMenuItemById('separatorDevTools').visible = show
+    applicationMenu.getMenuItemById('showDevTools').visible = show
+    applicationMenu.getMenuItemById('reloadWindow').visible = show
+  }
 
   for (const key in changes) {
     const value = changes[key]
@@ -129,6 +143,11 @@ export const viewLayoutChanged = (applicationMenu, changes) => {
         break
       case 'focus':
         changeMenuByName(focusModeMenuItemId, value)
+        break
+      case 'devtoolsEnabled' :
+        toggleEnableDevtools('devtoolsEnabled', !value)
+        break
+      default:
         break
     }
   }

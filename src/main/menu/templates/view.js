@@ -71,28 +71,62 @@ export default function (keybindings) {
       click (item, focusedWindow) {
         actions.reloadImageCache(focusedWindow)
       }
-    }]
-  }
+    }, 
+    // ] } if (global.MARKTEXT_DEBUG) { viewMenu.submenu.push({});
+    {
+      id: 'separatorDevTools',
+      type: 'separator',
+      enabled: false,
+      visible: false
 
-  if (global.MARKTEXT_DEBUG) {
-    viewMenu.submenu.push({
-      type: 'separator'
-    })
-    viewMenu.submenu.push({
+    },
+    {
       label: 'Show Developer Tools',
+      id: 'showDevTools',
       accelerator: keybindings.getAccelerator('view.toggle-dev-tools'),
       click (item, win) {
         actions.debugToggleDevTools(win)
-      }
-    })
-    viewMenu.submenu.push({
+      },
+      enabled: false,
+      visible: false
+      
+    },
+    {
       label: 'Reload window',
+      id: 'reloadWindow',
       accelerator: keybindings.getAccelerator('view.dev-reload'),
       click (item, focusedWindow) {
         actions.debugReloadWindow(focusedWindow)
-      }
-    })
+      },
+      enabled: false,
+      visible: false
+    }]
   }
-
   return viewMenu
 }
+// export function toggleEnableDevtools(enabled) {
+//   if (enabled) {
+//     viewMenu.submenu.push({
+//       id: 'separatorDevTools',
+//       type: 'separator'
+//     })
+//     viewMenu.submenu.push({
+//       label: 'Show Developer Tools',
+//       id: 'showDevTools',
+//       accelerator: keybindings.getAccelerator('view.toggle-dev-tools'),
+//       click (item, win) {
+//         actions.debugToggleDevTools(win)
+//       }
+//     })
+//     viewMenu.submenu.push({
+//       label: 'Reload window',
+//       id: 'reloadWindow',
+//       accelerator: keybindings.getAccelerator('view.dev-reload'),
+//       click (item, focusedWindow) {
+//         actions.debugReloadWindow(focusedWindow)
+//       }
+//     })
+//     return;
+//   }
+  
+// }

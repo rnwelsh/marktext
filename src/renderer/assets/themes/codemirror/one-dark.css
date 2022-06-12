@@ -30,7 +30,7 @@ SOFTWARE.
 .cm-s-one-dark {
   font-family: Menlo, Consolas, 'DejaVu Sans Mono', monospace;
   font-weight: 350;
-  font-size: 18px;
+  /* font-size: 18px; */
   color: #abb2bf;
   background-color: #282c34;
 }

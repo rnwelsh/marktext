@@ -87,6 +87,7 @@ class Preference extends EventEmitter {
           this.store.set(userSetting)
         }
       }
+      
     }
 
     this._listenForIpcMain()

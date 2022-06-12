@@ -61,3 +61,9 @@ export const INSERT_AFTER = {
 export const SEPARATOR = {
   type: 'separator'
 }
+export const SHOW_DEV_TOOLS = {
+  label: 'Show Dev Tools',
+  click (item, win) {
+    win.webContents.toggleDevTools()
+  }
+}

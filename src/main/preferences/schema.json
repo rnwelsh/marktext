@@ -324,6 +324,16 @@
       2
     ]
   },
+  "customCss": {
+    "description": "Custom CSS--Custom CSS to apply to the current theme.",
+    "type": "string",
+    "default": ""
+  },
+  "devToolsEnabled": {
+    "description": "Devtools--Allow showing devtools.",
+    "type": "boolean",
+    "default": false
+  },
   "spellcheckerEnabled": {
     "description": "Spelling--Whether spell checking is enabled.",
     "type": "boolean",

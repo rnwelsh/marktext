@@ -1,6 +1,11 @@
+/*<!-- @vue-disable no-trailing-spaces, space-before-function-paren, no-multiple-empty-lines -->*/
+  
+
 <template>
   <div class="pref-theme">
+
     <h4>Theme</h4>
+
     <section class="offcial-themes">
       <div v-for="t of themes" :key="t.name" class="theme"
         :class="[t.name, { 'active': t.name === theme }]"
@@ -9,13 +14,42 @@
         <div v-html="t.html"></div>
       </div>
     </section>
-    <separator></separator>
-    <cur-select
-      description="Automatically adjust application theme according to system settings"
-      :value="autoSwitchTheme"
-      :options="autoSwitchThemeOptions"
-      :onChange="value => onSelectChange('autoSwitchTheme', value)"
-    ></cur-select>
+
+    <separator/>
+
+    <compound>
+      <template #head>
+        <h6 class="title">Options</h6>
+      </template>
+
+      <template #children>
+        <cur-select
+          description="Automatically adjust application theme according to system settings"
+          :value="autoSwitchTheme"
+          :options="autoSwitchThemeOptions"
+          :onChange="value => onSelectChange('autoSwitchTheme', value)"
+        />
+      </template>
+    </compound>
+
+    <compound id="cssEditor" class="custom-css">
+      <template #head>
+        <h6 class="title">Custom CSS</h6>
+      </template>
+
+      <template #children>
+        <bool
+          description="Enable Developer Tools"
+          detailedDescription= "Toggle: ctrl+alt+I"
+          :bool="devToolsEnabled"
+          :onChange="value => onSelectChange('devToolsEnabled', value)"
+          more=""
+        />
+
+        <cssEditor></cssEditor>
+      </template>
+    </compound>
+
     <separator v-show="false"></separator>
     <section v-show="false" class="import-themes ag-underdevelop">
       <div>
@@ -37,23 +71,31 @@ import themeMd from './theme.md'
 import { autoSwitchThemeOptions, themes } from './config'
 import markdownToHtml from '@/util/markdownToHtml'
 import CurSelect from '../common/select'
+import Bool from '../common/bool'
 import Separator from '../common/separator'
+import Compound from '../common/compound'
+import CssEditor from '../cssEditor'
+import { toggleDevtoolsEnabled } from '@/../main/menu/actions/view'
 
 export default {
   components: {
     CurSelect,
-    Separator
+    Bool,
+    Separator,
+    Compound,
+    CssEditor
   },
   data () {
     this.autoSwitchThemeOptions = autoSwitchThemeOptions
     return {
-      themes: []
+      themes: [],
     }
   },
   computed: {
     ...mapState({
       autoSwitchTheme: state => state.preferences.autoSwitchTheme,
-      theme: state => state.preferences.theme
+      theme: state => state.preferences.theme,
+      devtoolsEnabled: state => state.layout.devtoolsEnabled
     })
   },
   created () {
@@ -73,7 +115,12 @@ export default {
   methods: {
     onSelectChange (type, value) {
       this.$store.dispatch('SET_SINGLE_PREFERENCE', { type, value })
-    }
+    },
+    updateLayoutState (type, value) {
+      // this.$store.dispatch('SET_SINGLE_PREFERENCE', { type, value })
+      toggleDevtoolsEnabled()
+    },
+
   }
 }
 </script>
@@ -176,4 +223,13 @@ export default {
       }
     }
   }
+  .custom-css {
+  box-sizing: border-box;
+  margin-top:8px;
+  margin-bottom:8px;
+  display:block;
+}
+.el-tooltip__popper {
+  font-family: monospace;
+}
 </style>

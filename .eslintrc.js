@@ -25,6 +25,14 @@ module.exports = {
   },
   plugins: ['html', 'vue'],
   rules: {
+    // ANNOYING RULES
+    'no-unused-vars': 'off',
+    'no-trailing-spaces': 'off',
+    'space-before-function-paren': 'off',
+    'no-multiple-empty-lines': 'off', 
+    'quotes': 'off',
+    'comma-dangle': 'off',
+    
     // Two spaces but disallow semicolons
     indent: ['error', 2, { 'SwitchCase': 1, 'ignoreComments': true }],
     semi: [2, 'never'],
